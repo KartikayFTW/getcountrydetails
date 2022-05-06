@@ -4,7 +4,7 @@ const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 const renderError = msg => {
   countriesContainer.insertAdjacentText('beforeend', msg);
-  // countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 
 ///////////////////////////////////////
@@ -59,7 +59,7 @@ const renderCountry = function (data, className = '') {
       </div>
     </article>`;
   countriesContainer.insertAdjacentHTML('beforeend', html);
-  //   countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 
 // const getCountryNeighbour = function (country) {
@@ -115,7 +115,7 @@ const getJSON = function (url, errorMsg = 'Something Went wrong') {
     return response.json();
   });
 };
-
+/*
 const getCountryData = function (country) {
   getJSON(`https://restcountries.com/v3.1/name/${country}`, 'Country not found')
     .then(([data]) => {
@@ -165,3 +165,66 @@ btn.addEventListener('click', () => {
 //         ); // close forEach
 //       });
 //   };
+/*
+setTimeout(() => {
+  console.log('1 second passed');
+  setTimeout(() => {
+    console.log('2 second passed');
+    setTimeout(() => {
+      console.log('3 second passed');
+    }, 3000);
+  }, 2000);
+}, 1000);
+
+const wait = seconds => {
+  return new Promise(resolve => {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+wait(1)
+  .then(() => {
+    console.log('1 sec pass');
+    return wait(2);
+  })
+  .then(() => {
+    console.log('2 sec pass');
+    return wait(3);
+  })
+  .then(() => {
+    console.log('3 sec pass');
+  });
+  */
+
+// Async await
+
+const getCountryData = async function (country) {
+  try {
+    const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
+    if (!res.ok) throw new Error(`Country not found!! (${res.status})`);
+
+    const [data] = await res.json();
+
+    renderCountry(data);
+
+    if (!('borders' in data)) throw new Error('No neighbour found');
+    const nb = data.borders[0];
+    const res1 = await fetch(
+      `https://restcountries.com/v3.1/alpha?codes=${nb}`
+    );
+    const [data1] = await res1.json();
+    console.log(data1);
+    renderCountry(data1, 'neighbour');
+  } catch (err) {
+    console.log(err);
+    renderError(`Something went wrong!! ${err.message}`);
+  }
+};
+
+btn.addEventListener('click', () => {
+  const countryData = prompt('Enter Country Name');
+  const country = countryData.toLowerCase();
+  getCountryData(country);
+});
+
+// getCountryData('australia');

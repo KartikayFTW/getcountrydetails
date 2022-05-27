@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-const btn = document.querySelector('.btn-country');
-const countriesContainer = document.querySelector('.countries');
-const renderError = msg => {
-  countriesContainer.insertAdjacentText('beforeend', msg);
+const btn = document.querySelector(".btn-country");
+const countriesContainer = document.querySelector(".countries");
+const renderError = (msg) => {
+  countriesContainer.insertAdjacentText("beforeend", msg);
   countriesContainer.style.opacity = 1;
 };
 
@@ -42,10 +42,10 @@ const renderError = msg => {
 // getCountryData(country);
 // getCountryData('portugal');
 
-const renderCountry = function (data, className = '') {
+const renderCountry = function (data, className = "") {
   const languages = Object.values(data.languages);
-  const currencies = Object.values(data.currencies).map(cur => cur.name);
-  let isHindi = data.name.common === 'India' ? languages[1] : languages[0];
+  const currencies = Object.values(data.currencies).map((cur) => cur.name);
+  let isHindi = data.name.common === "India" ? languages[1] : languages[0];
   const html = `<article class="country ${className} ">
       <img class="country__img" src="${data.flags.png}" />
       <div class="country__data">
@@ -58,7 +58,7 @@ const renderCountry = function (data, className = '') {
         <p class="country__row"><span>💰</span>${currencies.join(`<br/>`)}</p>
       </div>
     </article>`;
-  countriesContainer.insertAdjacentHTML('beforeend', html);
+  countriesContainer.insertAdjacentHTML("beforeend", html);
   countriesContainer.style.opacity = 1;
 };
 
@@ -108,8 +108,8 @@ const renderCountry = function (data, className = '') {
 //   );
 // };
 
-const getJSON = function (url, errorMsg = 'Something Went wrong') {
-  return fetch(url).then(response => {
+const getJSON = function (url, errorMsg = "Something Went wrong") {
+  return fetch(url).then((response) => {
     if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
 
     return response.json();
@@ -207,23 +207,26 @@ const getCountryData = async function (country) {
 
     renderCountry(data);
 
-    if (!('borders' in data)) throw new Error('No neighbour found');
+    if (!("borders" in data)) throw new Error("No neighbour found");
     const nb = data.borders[0];
     const res1 = await fetch(
       `https://restcountries.com/v3.1/alpha?codes=${nb}`
     );
     const [data1] = await res1.json();
     console.log(data1);
-    renderCountry(data1, 'neighbour');
+    renderCountry(data1, "neighbour");
   } catch (err) {
     console.log(err);
     renderError(`Something went wrong!! ${err.message}`);
   }
 };
 
-btn.addEventListener('click', () => {
-  const countryData = prompt('Enter Country Name');
+btn.addEventListener("click", () => {
+  const countryData = prompt("Enter Country Name");
   const country = countryData.toLowerCase();
+  if (country === "india") {
+    country === "bharat";
+  }
   getCountryData(country);
 });
 
